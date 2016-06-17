@@ -6,6 +6,7 @@
 
   This program implements a StringList data structure using a doubly
   linked list.
+  Uses the interface outlined in the string_list.h header file.
 
   Author - Mark Worrall - 06/19/16
 */
