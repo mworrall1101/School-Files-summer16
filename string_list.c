@@ -171,31 +171,3 @@ StringListNode* StringList_GetIndex(StringList* L, int i){
 	return curr;
 }
 
-int main(){
-	StringList S;
-	StringList_Init(&S);
-	char* str = "blue";
-	char* str2 = "green";
-	char* str3 = "yellow";
-	StringListNode* first ;//= StringList_AddFront(&S, str);
-	StringListNode* second = StringList_AddFront(&S, str2);
-	StringListNode* third = StringList_AddBack(&S, str3);
-	StringListNode* fourth = StringList_AddBack(&S, str);
-	first = StringList_GetIndex(&S,6);
-	if(first == NULL) printf("First out of bounds\n");
-//	StringList_RemoveNode(&S, third);
-	StringListNode* curr = S.head;
-	while(curr){
-		printf("%s\n", curr->element);
-		curr = curr->next; 
-	}
-	printf("Count = %d\n", StringList_Size(&S) );
-//	StringList_Destroy(&S);
-	if(!S.head) printf("List dne\n");
-	/*while(curr){
-
-		printf("%s\n", curr->element);
-		curr = curr->next; 
-	}*/
-	return 0;
-}
