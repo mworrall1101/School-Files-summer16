@@ -108,6 +108,8 @@ int test2(){
 		curr = T.tail;
 		if(!test_add(&T, curr, i, test_strings[i])) return TEST_FAILED;
 	}
+	/*Third list used to test both functions together
+	  Flip used to alternate front and back adds*/
 	printf("Strings added and size is correct.\n");
 	printf("\nTesting both functions together.\nInitializing...\n");
 	StringList U;
@@ -190,8 +192,8 @@ int test4(){
 		curr = S.tail;
 		if(!test_add(&S, curr, i, test_strings[i])) return TEST_FAILED;
 	}
-	//test out of bounds
 	printf("Testing StringList_Index() function...\n");
+	//Test for out of bounds index call returning NULL
 	if(StringList_GetIndex(&S,12) != NULL) {
 		printf("\nError: Out of bounds index call did not return NULL.\n");
 		return TEST_FAILED;
@@ -227,19 +229,22 @@ int test5(){
 	}
 	StringListNode* test_node = StringList_GetIndex(&S, 2);
 	printf("Testing StringList_InList() function...\nTesting Part 1...\n");
+	//Test for a particular node that is in the list
 	if(StringList_InList(&S, test_strings[2]) != test_node) {
 		printf("\nError: Node returned is not the expected node\n");
 		return TEST_FAILED;
 	}
 	printf("Part 2...\n");
+	//Test for a string which is in the list
 	if(StringList_InList(&S, "three") != test_node) {
 		printf("\nError: Node returned is not the expected node\n");
 		return TEST_FAILED;
 	}
 	char* missing_word = "twelve";
 	printf("Part 3...\n");
+	//Test for string which is not in the list
 	if(StringList_InList(&S, missing_word) != NULL) {
-		printf("\nError: Return value for word not found should be NULL.\n");
+		printf("\nError: Return value for missing string should be NULL.\n");
 		return TEST_FAILED;
 	}
 	printf("All parts of test 5 passed.\n");
@@ -264,16 +269,19 @@ int test6(){
 		if(!test_add(&S, curr, i, test_strings[i])) return TEST_FAILED;
 	}
 	printf("Testing StringList_RemoveNode()...\n");
+	//Remove the string "three" and then look for it in list
 	StringList_RemoveNode(&S, StringList_GetIndex(&S, 2));
 	if(StringList_InList(&S, "three") != NULL) {
 		printf("\nError: Failed to remove node from index 2\n");
 		return TEST_FAILED;
 	}
+	//Remove the string from the front of the list and then look for it in list
 	StringList_RemoveNode(&S, StringList_GetIndex(&S, 0));
 	if(StringList_InList(&S, "one") != NULL) {
 		printf("\nError: Failed to remove node from front of the list.\n");	
 		return TEST_FAILED;
 	}
+	//Remove the string from the back of the list and then ensure it is gone
 	StringList_RemoveNode(&S, StringList_GetIndex(&S, 1));
 	if(StringList_InList(&S, "four") != NULL) {
 		printf("\nError: Failed to remove node from end of the list.\n");	
@@ -284,6 +292,8 @@ int test6(){
 		StringList_AddBack(&S, test_strings[i]);
 	}
 	printf("Testing StringList_Remove()...\n");
+	//Remove is called on the string "two" multiple times to remove all occurences, 
+	//and then ensure it works when no string is found.
 	if(!StringList_Remove(&S, "two")){
 		printf("\nError: Failed to remove node containing specified string.\n");	
 		return TEST_FAILED;
@@ -291,16 +301,18 @@ int test6(){
 	}
 	StringList_Remove(&S, "two");
 	StringList_Remove(&S, "two");
+	//Ensure all occurences are removed
 	if(StringList_InList(&S, "two")){
 		printf("\nError: String found in list after attempting to remove all occurences.\n");	
 		return TEST_FAILED;
 		
 	}
+	//Test Remove on front node
 	if(!StringList_Remove(&S,StringList_GetIndex(&S, 0)->element)) {
 		printf("\nError: Failed to remove first node.\n");	
 		return TEST_FAILED;
 	}
-
+	printf("All test passed for StringList_Remove() and StringList_RemoveNode().\n");
 	return TEST_PASSED;
 }
 
@@ -320,6 +332,7 @@ int test7(){
 		StringList_AddBack(&S, test_strings[i]);
 	}
 	printf("Testing StringList_RemoveNode()...\n");
+	//Testing that pointers .next and .previous are properly set after removal of a node
 	StringList_RemoveNode(&S,S.head);
 	if(S.head->previous != NULL){
 		printf("\nError: 'node.previous' of new first node not set to NULL after removal of first node.\n");	
@@ -328,6 +341,7 @@ int test7(){
 	while(S.head != NULL) {
 		StringList_RemoveNode(&S, S.head);
 	}
+	//Remove all nodes using RemoveNode
 	if(S.tail != S.head) {
 		printf("\nError: After removing all nodes, S.head and S.tail are not NULL.\n");	
 		return TEST_FAILED;
@@ -343,6 +357,7 @@ int test7(){
 		return TEST_FAILED;
 		
 	}
+	printf("StringList_Destroy(), StringList_Remove() and StringList_RemoveNode() all working properly.\n");
 	return TEST_PASSED;
 }
 
@@ -363,6 +378,7 @@ int test8(){
 	while(i < 5){	
 		count = 0;
 		counter = 0;
+		printf("Adding 10,000,000 nodes...");
 		while(count < 10000000) {
 			if(counter < 30){
 					StringList_AddFront(&HS, "Hay");
@@ -379,14 +395,18 @@ int test8(){
 			}
 			count++;
 		}
+		//Look for node in list
 		if(StringList_InList(&HS,"Needle") == NULL) {
 			printf("\nError: Failed to find 'Needle' in HS.\n");
 			return TEST_FAILED;	
 		}
+		//Test size
 		if(StringList_Size(&HS) != 10000000) {
 			printf("\nError: StringList_Size is not correct(%d).\n", StringList_Size(&HS));
 			return TEST_FAILED;	
 		}
+		printf("Removing all nodes...");
+		//Test Destroy
 		StringList_Destroy(&HS);
 		if(StringList_Size(&HS) != 0) {
 			printf("\nError: StringList_Size should return zero after list destroyed.\n");
@@ -394,7 +414,7 @@ int test8(){
 		}
 		i++;
 	}
-
+	printf("Test ran 5 times with no errors.");
 	
 	return TEST_PASSED;
 }
