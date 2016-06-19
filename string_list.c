@@ -15,7 +15,6 @@
 #include <stdlib.h>
 #include "string_list.h"
 
-int count = 0;
 
 void StringList_Init(StringList* L){
 	L->head = NULL;
@@ -31,6 +30,12 @@ void StringList_Destroy(StringList* L){
 }
 
 int StringList_Size(StringList* L){
+	StringListNode* curr = L->head;
+	int count = 0;
+	while(curr != NULL) {
+		curr = curr->next;
+		count++;	
+	}
 	return count;
 }
 
@@ -66,7 +71,6 @@ StringListNode* StringList_AddFront(StringList* L, char* str){
 		L->head->previous = new_node;
 		L->head = new_node;
 	}
-	count++;
 	return new_node;
 }
 
@@ -102,7 +106,6 @@ StringListNode* StringList_AddBack(StringList* L, char* str){
 		L->tail->next = new_node;
 		L->tail = new_node;
 	}
-	count++;
 	return new_node;
 }
 
@@ -147,20 +150,19 @@ void StringList_RemoveNode(StringList* L, StringListNode* node){
 	}
 	free(node->element);
 	free(node);
-	count--;
 
 }
 
 StringListNode* StringList_InList(StringList* L, char* str){
 	StringListNode* curr = L->head;
-	while((strcmp(curr->element,str)) && (curr != NULL)){
+	while((curr != NULL) && (strcmp(curr->element,str))){
 		curr = curr->next;	
 	}
 	return curr;
 }
 
 StringListNode* StringList_GetIndex(StringList* L, int i){
-	if((i > (count-1)) || (i < 0)){
+	if((i > (StringList_Size(L)-1)) || (i < 0)){
 		return NULL;
 	}
 	StringListNode* curr = L->head;
